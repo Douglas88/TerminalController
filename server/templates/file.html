@@ -16,8 +16,9 @@
 <script type="text/html" id="barDemo">
   {% raw %}
   <a class="{{ !d.file_type?'layui-btn layui-btn-xs layui-btn-primary layui-btn-disabled':'layui-btn layui-btn-xs layui-btn-primary ' }}" lay-event="goin">进入</a>
-  <a class="layui-btn layui-btn-xs layui-btn-container" lay-event="rename">重命名</a>
+  <a class="layui-btn layui-btn-xs" style="background-color: #41b580" lay-event="rename">重命名</a>
   <a class="layui-btn layui-btn-xs layui-btn layui-btn-normal" lay-event="zip">压缩</a>
+  <a class="layui-btn layui-btn-xs layui-btn" style="background-color: #576670" lay-event="unzip">解压</a>
   <a class="{{ d.file_type?'layui-btn layui-btn-xs layui-btn-disabled':'layui-btn layui-btn-xs layui-btn-black' }}" lay-event="download">下载</a>
   <a class="{{ d.file_type?'layui-btn layui-btn-xs layui-btn-warm layui-btn-disabled':'layui-btn layui-btn-xs layui-btn-warm' }}"  lay-event="edit">编辑</a>
   <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
@@ -42,13 +43,13 @@
     ,cols: [[
       {type:'numbers'}
       ,{field:'filename', title:'文件名', width:210}
-      ,{field:'file_type', title:'文件类型', width:90, templet:(d)=>{return d.file_type?"<span style='background-color: #C2BE9E'>文件夹</span>":"<span>文件</span>"}}
+      ,{field:'file_type', title:'类型', width:70, templet:(d)=>{return d.file_type?"<img style='width: 20px;' src='/static/img/dir.png'/>":"<img style='width: 20px;' onerror='this.src=`/static/img/notfound.png`' src='/static/img/"+d.filename.split(".").pop()+".png'/>"}}
       ,{field:'mtime', title:'修改时间', width:160,templet:(d)=>{return util.toDateString(d.mtime, "yyyy-MM-dd HH:mm:ss")}}
       ,{field:'ctime', title:'创建时间', width:160,templet:(d)=>{return util.toDateString(d.ctime, "yyyy-MM-dd HH:mm:ss")}}
       ,{field:'atime', title:'访问时间', width:160,templet:(d)=>{return util.toDateString(d.atime, "yyyy-MM-dd HH:mm:ss");}}
       ,{field:'file_abspath', title:'全路径',templet:(d)=>{last_path=d.last_dirname;path.value=d.dirname;return d.file_abspath}}
       ,{field:'file_size', title:'文件大小', width:120,templet:(d)=>{return (d.file_size/1024/1024).toFixed(2)+"MB"}}
-      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:340}
+      ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:380}
     ]]
     ,where:{
         dir : document.getElementById("path").value
@@ -73,8 +74,13 @@
     table.on('tool(file)', function(obj){
         const data = obj.data;
         if(obj.event === 'del'){
-            layer.confirm('真的删除行么', function(index){
-            obj.del();
+            layer.confirm('真的删除么?', function(index){
+            data["action"] = "del";
+            req(data,(data)=>{
+                console.info(data);
+                layer.msg(data.data.msg);
+                setTimeout(()=>{table_reload(path.value)},1500)
+            })
             layer.close(index);
           });
         }else if(obj.event === 'goin'){
@@ -94,6 +100,20 @@
             })
         }else if(obj.event === 'zip'){
             console.info(data)
+            data["action"] = "zip";
+            req(data,(data)=>{
+                console.info(data);
+                layer.msg(data.data.msg);
+                setTimeout(()=>{table_reload(path.value)},1500)
+            })
+        }else if(obj.event === 'unzip'){
+            console.info(data)
+            data["action"] = "unzip";
+            req(data,(data)=>{
+                console.info(data);
+                layer.msg(data.data.msg);
+                setTimeout(()=>{table_reload(path.value)},1500)
+            })
         }else if(obj.event === 'download'){
             data["action"] = "download"
             req(data, ()=>{
@@ -103,7 +123,7 @@
             const url = location.href.replace("file", "edit")
             layer.open({
                 type: 2
-                ,title: "Edit -> ctrl + s to save"
+                ,title: "edit -> " + data.file_abspath
                 ,closeBtn: 1
                 ,anim: 5
                 ,shade: 0
@@ -111,7 +131,7 @@
                 ,moveType: 1 //拖拽模式，0或者1
                 ,content: url+"?path="+data.file_abspath
             });
-
+            layer.msg("ctrl + s 保存",{time: 700});
         }
     })
     function req(data, callable) {

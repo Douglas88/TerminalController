@@ -1,7 +1,6 @@
 import base64
 import datetime
 import json
-import lzma
 import os
 import sys
 from flask import Flask, jsonify, request, render_template
@@ -27,7 +26,7 @@ class MSG:
     def get_data(self, data: dict) -> dict:
         wait_data = json.dumps(data)
         _data = {}
-        self.lock.acquire(timeout=5)
+        self.lock.acquire()
         try:
             self.ws.send(wait_data)
             _data = self.ws.receive()
@@ -35,7 +34,6 @@ class MSG:
             pass
         finally:
             self.lock.release()
-            pass
         return json.loads(_data)
 
 
@@ -56,24 +54,23 @@ def base():
 
 @app.route('/api.json')
 def api():
-    return jsonify({"code": 0, "data": [{"uid": i, "system": cache[i][1], "disk": cache[i][2], "uptime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} for i in cache.keys()]})
+    return jsonify({"code": 0, "data": [{"uid": i, "system": cache[i][1], "uptime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} for i in cache.keys()]})
 
 
 @sockets.route("/ping")
 def ping(ws):
     msg = json.loads(ws.receive())
     uid = msg['uid']
-    cache.update({uid: [MSG(ws), msg["system"], msg["disk"]]})
+    cache.update({uid: [MSG(ws), msg["system"]]})
     while not ws.closed:
-        time.sleep(1)
+        time.sleep(3)
     cache.pop(uid)
-    print("close..")
 
 
 @app.route('/capture/<uid>', methods=['GET', 'POST'])
 def capture(uid):
     if request.method == "GET":
-        return render_template('capture.html', speed=0.6)  # 0.6秒抓取一次屏幕
+        return render_template('capture.html', speed=SPEED)
     else:
         _data = cache[uid][0].get_data({"v_uid": "0222", "type": "capture"})
         return jsonify(_data)
@@ -99,12 +96,10 @@ def shell(uid):
 @app.route('/file/<uid>', methods=['GET', 'POST'])
 def file(uid):
     if request.method == "GET":
-        return render_template('file.html', disk_root=[{"title": e_disk_path, "id": e_disk_path} for e_disk_path in cache[uid][2]])
+        return render_template('file.html')
     elif request.form.get("dir"):
-        _dir = request.form.get("dir")
-        if _dir:
-            _data = cache[uid][0].get_data({"v_uid": "0222", "type": "dir", "data": _dir})
-            return jsonify({"code": 0, "data": _data["raw"]})
+        _data = cache[uid][0].get_data({"v_uid": "0222", "type": "dir", "data": request.form.get("dir")})
+        return jsonify({"code": 0, "data": _data["raw"]})
     elif request.form.get("action") == "upload":
         _file = request.files["file"]
         _path = request.form.get("src_path")
@@ -113,14 +108,13 @@ def file(uid):
         return jsonify(_data)
     else:
         data = json.loads(request.data)
-        if data["action"] == "rename":
-            _data = cache[uid][0].get_data({"v_uid": "0222", "type": data["action"], "data": data})
-            return jsonify({"code": 0, "data": _data["raw"]})
         if data["action"] == "download":
             _data = cache[uid][0].get_data({"v_uid": "0222", "type": data["action"], "data": data})
             with open("static/files/{}".format(data["filename"]), "wb") as f:
                 f.write(base64.b64decode(_data["data"]))
             return jsonify({"code": 0})
+        _data = cache[uid][0].get_data({"v_uid": "0222", "type": data["action"], "data": data})
+        return jsonify({"code": 0, "data": _data["raw"]})
 
 
 @app.route('/edit/<uid>', methods=['GET', 'POST'])
@@ -130,7 +124,6 @@ def edit(uid):
         assert path
         _data = cache[uid][0].get_data({"v_uid": "0222", "type": "edit", "data": {"path": path}})
         return render_template('edit.html', code=_data["raw"]["data"])
-
     else:
         path = request.args.get("path")
         data = json.loads(request.data)["data"]
@@ -142,10 +135,12 @@ if __name__ == '__main__':
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
     from gevent import monkey
-
     monkey.patch_all()
-    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app, handler_class=WebSocketHandler)
-    print("server run at", "http://127.0.0.1:5000")
+    SPEED = 0.7
+    HOST = '0.0.0.0'
+    PORT = 5000
+    server = pywsgi.WSGIServer((HOST, PORT), app, handler_class=WebSocketHandler)
+    print("server run at", "http://{}:{}".format(HOST, PORT))
     try:
         server.serve_forever()
     except KeyboardInterrupt as e:

