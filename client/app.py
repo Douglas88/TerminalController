@@ -7,6 +7,7 @@ import platform
 import uuid
 from tempfile import TemporaryFile
 import base64
+import shutil
 import zlib
 from struct import pack, calcsize, unpack
 import json
@@ -19,6 +20,7 @@ import urllib.parse
 import time
 
 SERVER_ADDRESS = "http://127.0.0.1:5000"  # 地址
+
 while True:
     try:
         url = "{}/base".format(SERVER_ADDRESS)

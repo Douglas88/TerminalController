@@ -12,6 +12,9 @@ import threading
 app = Flask(__name__)
 sockets = Sockets(app)
 cache = {}
+SPEED = 0.7
+HOST = '0.0.0.0'
+PORT = 5000
 
 
 class MSG:
@@ -131,14 +134,11 @@ def edit(uid):
         return jsonify(_data)
 
 
-if __name__ == '__main__':
+def main():
     from gevent import pywsgi
     from geventwebsocket.handler import WebSocketHandler
     from gevent import monkey
     monkey.patch_all()
-    SPEED = 0.7
-    HOST = '0.0.0.0'
-    PORT = 5000
     server = pywsgi.WSGIServer((HOST, PORT), app, handler_class=WebSocketHandler)
     print("server run at", "http://{}:{}".format(HOST, PORT))
     try:
@@ -146,3 +146,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt as e:
         server.stop()
         sys.exit()
+
+
+if __name__ == '__main__':
+    main()
