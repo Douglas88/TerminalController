@@ -10,12 +10,6 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
     linux需要python3的环境，点击主页右下加创建，输入服务器地址，可以直接生成在buildout目录
     windows需要输入服务器地址点击创建后，在点击目录下的build.cmd，在弹出的界面一直点下一步，等待打包完，到buildout目录
 
-![image](https://github.com/mycve/WinController/blob/main/1.png)
-![image](https://github.com/mycve/WinController/blob/main/2.png)
-![image](https://github.com/mycve/WinController/blob/main/3.png)
-
-
-[演示视频](https://github.com/mycve/WinController/blob/main/demo.mp4?raw=true)
 
 ### 免责、版权声明（浏览、下载=代表同意条款）
     此工具作用于合规合法的攻防演练，或其它（包括不限于 教育、学习等目的）
