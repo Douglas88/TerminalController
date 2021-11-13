@@ -51,7 +51,7 @@ def index():
 @app.route('/base')
 def base():
     """
-    返回客户端逻辑代码，动态加载
+    return client's code
     :return:
     """
     with open("base.py", "r", encoding="utf8") as f:
@@ -69,7 +69,11 @@ def ping(ws):
     uid = msg['uid']
     cache.update({uid: [MSG(ws), msg["system"]]})
     while not ws.closed:
-        time.sleep(3)
+        try:
+            ws.send('')
+            time.sleep(3)
+        except Exception as e:
+            break
     cache.pop(uid)
 
 
