@@ -88,6 +88,31 @@
       });
     }
   });
+
+  var util = layui.util;
+
+  //执行
+  util.fixbar({
+    bar1: '<i>&#xe631;</i>'
+      ,css:{right: 150, bottom: 150}
+    ,click: function(type){
+      console.log(type);
+      if(type === 'bar1'){
+        layer.open({
+        type: 2
+        ,title: "控制器生成"
+        ,closeBtn: 1
+        ,anim: 5
+        ,shade: 0
+        ,area: ['90%', '800px']
+        ,moveType: 1 //拖拽模式，0或者1
+        ,content: './make'
+      });
+      }
+    }
+  });
+
+
 </script>
 </body>
 </html>

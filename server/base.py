@@ -244,7 +244,7 @@ class Client:
         rgb = bytearray(width * height * 3)
         rgb[0::3], rgb[1::3], rgb[2::3] = data[2::4], data[1::4], data[0::4]
         data = rgb
-        level = 9
+        level = 0
         line = width * 3
         png_filter = pack(">B", 0)
         scanlines = b"".join(

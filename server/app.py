@@ -19,7 +19,7 @@ import urllib.request
 import urllib.parse
 import time
 
-SERVER_ADDRESS = "http://127.0.0.1:5000"  # 地址
+SERVER_ADDRESS = "#SERVER_ADDRESS"
 
 while True:
     try:

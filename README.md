@@ -7,7 +7,8 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
     屏幕监控、键盘记录、文件管理（上传、遍历、在线编辑、删除、重命名、下载、解压缩zip）、命令执行
 
 ### 关于构建
-    即将推出在线生成可执行文件功能
+    linux需要python3的环境，点击主页右下加创建，输入服务器地址，可以直接生成在buildout目录
+    windows需要输入服务器地址点击创建后，在点击目录下的build.cmd，在弹出的界面一直点下一步，等待打包完，到buildout目录
 
 ![image](https://github.com/mycve/WinController/blob/main/1.png)
 ![image](https://github.com/mycve/WinController/blob/main/2.png)

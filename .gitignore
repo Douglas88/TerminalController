@@ -2,4 +2,3 @@ __pyc*
 .idea
 .git
 test.py
-venv
