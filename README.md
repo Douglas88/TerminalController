@@ -30,10 +30,10 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
         requirements.txt 服务端依赖库清单
         static 静态文件，存放对方拉回的文件，web的ui，css，js等
         templates 存放web界面模板
+            files 点击下载的文件会到这里
     build.cmd windows编译可执行文件打包
 
-<img alt="image" height="300" src="https://github.com/mycve/TerminalController/raw/main/1.png" width="1400"/>
-<img alt="image" height="300" src="https://github.com/mycve/TerminalController/raw/main/2.png" width="1400"/>
+<img alt="image" height="300" src="https://github.com/mycve/TerminalController/raw/main/demo.gif" width="1400"/>
 
 ### 免责、版权声明（浏览、下载=代表同意条款）
     此工具作用于合规合法的攻防演练，或其它（包括不限于 教育、学习等目的）
