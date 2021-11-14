@@ -33,7 +33,7 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
         templates 存放web界面模板
             files 点击下载的文件会到这里
     build.cmd windows编译可执行文件打包
-
+### gif预览
 <img alt="image" height="300" src="https://github.com/mycve/TerminalController/raw/main/demo.gif" width="1400"/>
 
 ### 免责、版权声明（浏览、下载=代表同意条款）
