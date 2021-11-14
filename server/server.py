@@ -10,14 +10,13 @@ from tempfile import NamedTemporaryFile
 from shutil import copyfile
 import time
 import zipapp
+from config import *
 import threading
 
 app = Flask(__name__)
 sockets = Sockets(app)
 cache = {}
-SPEED = 0.7
-HOST = '0.0.0.0'
-PORT = 5000
+
 
 
 class MSG:
