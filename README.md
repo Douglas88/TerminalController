@@ -30,9 +30,14 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
         base.py 客户端后期动态加载的逻辑代码
         requirements.txt 服务端依赖库清单
         static 静态文件，存放对方拉回的文件，web的ui，css，js等
+             files 点击下载的文件会到这里
         templates 存放web界面模板
-            files 点击下载的文件会到这里
     build.cmd windows编译可执行文件打包
+
+### 后期规划
+    需要充足的时间构建，完成一个插件式的远程管理。
+    插件可能包含（内存加载exe，socks5，扫描器等）
+    这么个平台。
 ### gif预览
 <img alt="image" height="300" src="https://github.com/mycve/TerminalController/raw/main/demo.gif" width="1400"/>
 
