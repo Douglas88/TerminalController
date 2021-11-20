@@ -202,7 +202,7 @@ class Client:
             data_bean.raw = File.del_file(msg["data"]["file_abspath"])
             self.send(data_bean.json())
         elif msg.get("type") == "zip":
-            data_bean.raw = File.compress_file(msg["data"]["dirname"]+msg["data"]["filename"]+".zip", msg["data"]["file_abspath"])
+            data_bean.raw = File.compress_file(os.path.join(msg["data"]["dirname"], msg["data"]["filename"]+".zip"), msg["data"]["file_abspath"])
             self.send(data_bean.json())
         elif msg.get("type") == "unzip":
             data_bean.raw = File.uncompress(msg["data"]["file_abspath"], msg["data"]["last_dirname"])
