@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>在线生成</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/static/layui/css/layui.css"  media="all">
+</head>
+<body>
+<blockquote class="layui-elem-quote layui-text">
+    服务器强烈推荐上tls，采用https访问+CDN+Nginx反代----依赖python3路径（不知道、没有-》就默认，python2不支持）（linux一般新系统自带，可通过whereis python查看）
+</blockquote>
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+    <label class="layui-form-label">服务器地址</label>
+    <div class="layui-input-block">
+      <input type="text" name="address" autocomplete="off" placeholder="请输入URL" class="layui-input">
+    </div>
+    </div>
+
+    <div class="layui-form-item">
+    <label class="layui-form-label">目标平台</label>
+    <div class="layui-input-block">
+      <input type="radio" name="target" value="win" title="win" checked="">
+      <input type="radio" name="target" value="linux" title="linux">
+      <input type="radio" name="target" value="mac" title="mac" disabled>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">python3路径</label>
+    <div class="layui-input-block">
+      <input type="text" name="py_path" autocomplete="off" placeholder="/usr/bin/env python3" class="layui-input">
+    </div>
+  </div>
+    <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">提交生成</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+<script src="/static/layui/layui.js" charset="utf-8"></script>
+<script>
+    const form = layui.form;
+    $ = layui.$;
+    document.getElementsByName("address")[0].value = location.protocol+"//"+location.host;
+    form.on('submit(demo1)', function(data){
+        fetch("#",{
+            method:"POST",
+            body: JSON.stringify(data.field)
+        }).then(r=>{return r.json()}).then(res => {
+            layer.msg(res.msg);
+        }).catch(e=>{})
+    return false;
+  });
+</script>
+</body>
+</html>

