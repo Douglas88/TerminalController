@@ -3,3 +3,4 @@ __pyc*
 .git
 test.py
 client/app.py
+venv

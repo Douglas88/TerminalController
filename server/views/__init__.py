@@ -8,6 +8,7 @@
 # from .shell import shell
 # from .base import base
 import os
+import traceback
 views = []
 
 
@@ -16,5 +17,6 @@ for _dir in os.listdir(os.path.dirname(__file__)):
         try:
             exec("from .{0} import {0};views.append({0})".format(_dir))
         except ImportError as e:
-            print("[!] ", e)
+            print("[!] --------------------------------------------------------")
+            traceback.print_exc()
 

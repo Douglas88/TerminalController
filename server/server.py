@@ -1,7 +1,7 @@
 import sys
 import datetime
 import json
-from flask import Flask
+from flask import Flask, current_app
 from flask_sockets import Sockets
 import time
 from config import *
@@ -10,20 +10,22 @@ from views import *
 
 app = Flask(__name__)
 sockets = Sockets(app)
+with app.app_context():
+    current_app.cache = {}  # term Object
 
 
 @sockets.route("/ping")
 def ping(ws):
     msg = json.loads(ws.receive())
     uid = msg['uid']
-    cache.update({uid: [MSG(ws), msg["system"], datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]})
+    current_app.cache.update({uid: [MSG(ws), msg["system"], datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")]})
     while not ws.closed:
         try:
             ws.send('')
             time.sleep(3)
         except Exception as e:
             break
-    cache.pop(uid)
+    current_app.cache.pop(uid)
 
 
 for view in views:

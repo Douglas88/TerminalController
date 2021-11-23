@@ -3,7 +3,7 @@ import json
 import os
 import zipapp
 from flask import Blueprint, request, render_template, jsonify
-from config import SPEED, cache
+from config import SPEED
 
 make = Blueprint('make', __name__, template_folder=".")
 

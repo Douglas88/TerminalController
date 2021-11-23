@@ -1,7 +1,7 @@
 import base64
 import datetime
-from flask import Blueprint, request, render_template, jsonify
-from config import SPEED, cache
+from flask import Blueprint, request, render_template, jsonify, current_app
+from config import SPEED
 
 index = Blueprint('index', __name__, template_folder=".")
 
@@ -13,4 +13,4 @@ def _index():
 
 @index.route('/api.json')
 def _api():
-    return jsonify({"code": 0, "data": [{"uid": i, "system": cache[i][1], "uptime": cache[i][2]} for i in cache.keys()]})
+    return jsonify({"code": 0, "data": [{"uid": i, "system": current_app.cache[i][1], "uptime": current_app.cache[i][2]} for i in current_app.cache.keys()]})

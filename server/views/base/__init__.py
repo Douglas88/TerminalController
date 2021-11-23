@@ -1,5 +1,5 @@
 from flask import Blueprint, request, render_template, jsonify
-from config import SPEED, cache
+from config import SPEED
 base = Blueprint('base', __name__, template_folder=".")
 
 

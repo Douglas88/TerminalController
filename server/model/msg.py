@@ -11,7 +11,10 @@ class MSG:
         self.lock = threading.RLock()
         self.ws = ws
 
-    def get_data(self, data: dict) -> dict:
+    def send_term_command(self, data: dict) -> dict:
+        """
+        向终端发送指令
+        """
         wait_data = json.dumps(data)
         _data = {}
         self.lock.acquire()
