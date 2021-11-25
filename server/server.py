@@ -39,7 +39,7 @@ if __name__ == '__main__':
     from gevent import monkey
 
     monkey.patch_all()
-    app.debug = True
+    app.debug = False
     server = pywsgi.WSGIServer((HOST, PORT), app, handler_class=WebSocketHandler)
     print("server run at", "http://{}:{}".format(HOST, PORT))
     try:

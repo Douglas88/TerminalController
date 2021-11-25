@@ -3,10 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>管理系统</title>
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link rel="stylesheet" href="/static/layui/css/layui.css"  media="all">
+    {% include 'include.html' %}
     <style>
         .layui-btn{
             border: 1px solid #6e2c2c
@@ -34,7 +31,6 @@
   <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="file">文件管理</a>
   <a class="layui-btn layui-btn-xs" lay-event="more">更多 <i class="layui-icon layui-icon-down"></i></a>
 </script>
-<script src="/static/layui/layui.js" charset="utf-8"></script>
 <script>
   const table = layui.table;
   const dropdown = layui.dropdown;
@@ -95,20 +91,24 @@
         elem: this //触发事件的 DOM 对象
         ,show: true //外部事件触发即显示
         ,data: [{
-          title: '退出'
-          ,id: 'exit'
-        },{
-          title: '内网穿透'
+          title: 'socks5'
           ,id: 'socks5'
+        },{
+          title: 'portforward'
+          ,id: 'portforward'
         }]
         ,click: function(menudata){
-          if(menudata.id === 'exit'){
-            layer.confirm('真的删除行么', function(index){
-              obj.del();
-              layer.close(index);
-            });
-          } else if(menudata.id === 'socks5'){
-            layer.msg('socks5');
+            if(menudata.id === 'socks5'){
+            layer.open({
+                type: 2
+                ,title: "socks5"
+                ,closeBtn: 1
+                ,anim: 5
+                ,shade: 0
+                ,area: ['90%', '800px']
+                ,moveType: 1 //拖拽模式，0或者1
+                ,content: './socks5/' + data.uid
+              });
           }
         }
         ,style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' //设置额外样式

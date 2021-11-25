@@ -4,7 +4,7 @@ import socket
 import struct
 from socketserver import ThreadingMixIn, TCPServer, StreamRequestHandler
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 SOCKS_VERSION = 5
 
 
@@ -13,8 +13,8 @@ class ThreadingTCPServer(ThreadingMixIn, TCPServer):
 
 
 class SocksProxy(StreamRequestHandler):
-    username = 'username'
-    password = 'password'
+    username = '{username}'
+    password = '{password}'
 
     def handle(self):
         logging.info('Accepting connection from %s:%s' % self.client_address)
@@ -67,8 +67,7 @@ class SocksProxy(StreamRequestHandler):
 
             addr = struct.unpack("!I", socket.inet_aton(bind_address[0]))[0]
             port = bind_address[1]
-            reply = struct.pack("!BBBBIH", SOCKS_VERSION, 0, 0, 1,
-                                addr, port)
+            reply = struct.pack("!BBBBIH", SOCKS_VERSION, 0, 0, 1, addr, port)
 
         except Exception as err:
             logging.error(err)

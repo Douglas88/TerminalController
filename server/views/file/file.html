@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>文件管理</title>
-    <link rel="stylesheet" href="/static/layui/css/layui.css"  media="all">
+    {% include 'include.html' %}
 </head>
 <body>
 <div class="layui-container" style="display: flex;margin: 10px 0 0 0">
@@ -24,8 +24,6 @@
   <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
   {% endraw  %}
 </script>
-<script src="/static/layui/layui.js" charset="utf-8"></script>
-
 <script>
     const table = layui.table
     const util = layui.util;

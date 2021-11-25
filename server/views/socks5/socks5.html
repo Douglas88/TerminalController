@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>socks5</title>
+    {% include 'include.html' %}
+</head>
+<body>
+<form class="layui-form" action="">
+  <div class="layui-form-item">
+    <label class="layui-form-label">username</label>
+    <div class="layui-input-block">
+      <input type="text" name="username" autocomplete="off" value="username" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">password</label>
+    <div class="layui-input-block">
+      <input type="text" name="password" autocomplete="off" value="password" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">host</label>
+    <div class="layui-input-block">
+      <input type="text" name="host" autocomplete="off" value="0.0.0.0" class="layui-input">
+    </div>
+  </div>
+    <div class="layui-form-item">
+    <label class="layui-form-label">port</label>
+    <div class="layui-input-block">
+      <input type="text" name="port" autocomplete="off" value="1080" class="layui-input">
+    </div>
+  </div>
+    <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+</body>
+<script>
+   const form = layui.form
+  form.on('submit(demo1)', function(data){
+    data.field["type"] = "socks5";
+    fetch("#",{
+        method:"POST",
+        body:JSON.stringify(data.field)
+    }).then(r=>{return r.json()}).then(res=>{
+        console.info(res);
+        layer.msg(res.raw);
+    }).catch(e=>{});
+    return false;
+  });
+</script>
+</html>

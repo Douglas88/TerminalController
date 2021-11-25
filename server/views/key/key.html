@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>键盘记录</title>
-    <link rel="stylesheet" href="../static/layui/css/layui.css"  media="all">
+    {% include 'include.html' %}
 </head>
 <body>
 <pre class="layui-code" lay-title="keyboard">
 {{code}}
 </pre>
-<script src="../static/layui/layui.js" charset="utf-8"></script>
 <script>
     layui.code();
 </script>
